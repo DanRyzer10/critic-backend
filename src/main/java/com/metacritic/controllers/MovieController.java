@@ -1,12 +1,10 @@
 package com.metacritic.controllers;
 
 import com.metacritic.domain.Movie;
+import com.metacritic.domain.dtos.CreateMovieDTO;
 import com.metacritic.services.MovieService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,8 +20,13 @@ public class MovieController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> GetMovies(){
-        List<Movie> movies = movieService.findAll();
+    public ResponseEntity<?> GetMovies(@RequestParam(required = false) String title){
+        List<Movie> movies;
+        if (title != null && !title.isEmpty()) {
+            movies = movieService.findByTitleContaining(title);
+        } else {
+            movies = movieService.findAll();
+        }
         return ResponseEntity.ok(movies);
     }
     @GetMapping("/{id}")
@@ -34,4 +37,10 @@ public class MovieController {
         }
         return ResponseEntity.ok(movie);
     }
+    @PostMapping("/create")
+    public ResponseEntity<?> CreateMovie(@RequestBody CreateMovieDTO movie){
+        return ResponseEntity.ok(movieService.save(movie));
+    }
+
+
 }

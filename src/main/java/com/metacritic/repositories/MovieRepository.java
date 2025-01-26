@@ -9,4 +9,5 @@ public interface MovieRepository extends CrudRepository<Movie, Long> {
     Movie findMovieByTitle(String title);
     Movie findMovieById(Long id);
     List<Movie> findMovieByIdIsAfter(Long id);
+    List<Movie> findByTitleContainingIgnoreCase(String title);
 }
